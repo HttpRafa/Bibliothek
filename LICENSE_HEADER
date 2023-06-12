@@ -21,16 +21,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.rafael.bibliothek;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class BibliothekApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(BibliothekApplication.class, args);
-	}
-
-}
