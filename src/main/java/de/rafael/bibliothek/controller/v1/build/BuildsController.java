@@ -62,10 +62,10 @@ public class BuildsController extends ApiController {
     }
 
     @GetMapping("/v1/projects/{project:" + Project.PATTERN + "}/versions/{version:" + Version.PATTERN + "}/builds")
-    public ResponseEntity<?> build(@PathVariable("project") @Pattern(regexp = Project.PATTERN) String projectId, @PathVariable("version") @Pattern(regexp = Version.PATTERN) String versionId) {
-        var project = super.findProject(projectId);
-        var version = super.findVersion(project, versionId);
-        var builds = this.builds.findAllByProjectAndVersion(project._id(), version._id()).stream().map(build ->
+    public ResponseEntity<?> build(@PathVariable("project") @Pattern(regexp = Project.PATTERN) String projectName, @PathVariable("version") @Pattern(regexp = Version.PATTERN) String versionName) {
+        var project = super.findProject(projectName);
+        var version = super.findVersion(project, versionName);
+        var builds = super.builds.findAllByProjectAndVersion(project._id(), version._id()).stream().map(build ->
                 new ResponseBuild(
                         build.number(),
                         build.timestamp(),
@@ -77,9 +77,9 @@ public class BuildsController extends ApiController {
         return ok(
                 CACHE,
                 new Response(
-                    project.id(),
                     project.name(),
-                    version.id(),
+                    project.friendlyName(),
+                    version.name(),
                     builds
                 )
         );

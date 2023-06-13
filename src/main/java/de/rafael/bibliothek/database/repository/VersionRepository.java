@@ -42,6 +42,6 @@ public interface VersionRepository extends MongoRepository<Version, ObjectId> {
 
     List<Version> findAllByProjectAndGroup(final ObjectId project, final ObjectId group);
 
-    Optional<Version> findByProjectAndId(final ObjectId project, final String id);
+    Optional<Version> findByProjectAndName(final ObjectId project, final String name);
 
 }

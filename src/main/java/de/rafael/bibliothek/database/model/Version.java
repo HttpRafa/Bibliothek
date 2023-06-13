@@ -36,9 +36,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 
 @CompoundIndex(def = "{'project': 1, 'group': 1}")
-@CompoundIndex(def = "{'project': 1, 'id': 1}")
+@CompoundIndex(def = "{'project': 1, 'name': 1}")
 @Document(collection = "versions")
-public record Version(@Id ObjectId _id, ObjectId project, ObjectId group, String id, Instant timestamp) {
+public record Version(@Id ObjectId _id, ObjectId project, ObjectId group, String name, Instant timestamp) {
 
     public static final String PATTERN = "[0-9.]+-?(?:pre|SNAPSHOT)?(?:[0-9.]+)?";
 

@@ -60,16 +60,16 @@ public class VersionController extends ApiController {
     }
 
     @GetMapping("/v1/projects/{project:" + Project.PATTERN + "}/versions/{version:" + Version.PATTERN + "}")
-    public ResponseEntity<?> version(@PathVariable("project") @Pattern(regexp = Project.PATTERN) String projectId, @PathVariable("version") @Pattern(regexp = Version.PATTERN) String versionId) {
-        var project = super.findProject(projectId);
-        var version = super.findVersion(project, versionId);
-        var builds = this.builds.findAllByProjectAndVersion(project._id(), version._id());
+    public ResponseEntity<?> version(@PathVariable("project") @Pattern(regexp = Project.PATTERN) String projectName, @PathVariable("version") @Pattern(regexp = Version.PATTERN) String versionName) {
+        var project = super.findProject(projectName);
+        var version = super.findVersion(project, versionName);
+        var builds = super.builds.findAllByProjectAndVersion(project._id(), version._id());
         return ok(
                 CACHE,
                 new Response(
-                        project.id(),
                         project.name(),
-                        version.id(),
+                        project.friendlyName(),
+                        version.name(),
                         builds.stream().map(Build::number).toList()
                 )
         );

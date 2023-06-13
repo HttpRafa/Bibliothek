@@ -35,11 +35,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @since 19:27, 12.06.23
  */
 
-@CompoundIndex(def = "{'project': 1, 'id': 1}")
+@CompoundIndex(def = "{'project': 1, 'name': 1}")
 @Document(collection = "groups")
-public record Group(@Id ObjectId _id, ObjectId project, String id, Instant timestamp) {
+public record Group(@Id ObjectId _id, ObjectId project, String name, Instant timestamp) {
 
-    public static final String PATTERN = "";
+    public static final String PATTERN = Version.PATTERN;
 
     public static final Comparator<Group> COMPARATOR = Comparator.comparing(Group::timestamp);
 

@@ -21,25 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.rafael.bibliothek.database.repository;
+package de.rafael.bibliothek.throwables;
 
-import de.rafael.bibliothek.database.model.Group;
-import java.util.List;
-import java.util.Optional;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import java.io.Serial;
 
 /**
  * @author Rafael K.
- * @since 19:35, 12.06.23
+ * @since 19:52, 12.06.23
  */
 
-@Repository
-public interface GroupRepository extends MongoRepository<Group, ObjectId> {
+public class GroupNotFound extends RuntimeException {
 
-    List<Group> findAllByProject(final ObjectId project);
-
-    Optional<Group> findByProjectAndName(final ObjectId project, final String name);
+    @Serial
+    private static final long serialVersionUID = 4789397072200030700L;
 
 }

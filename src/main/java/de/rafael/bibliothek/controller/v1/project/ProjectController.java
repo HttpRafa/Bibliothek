@@ -60,15 +60,15 @@ public class ProjectController extends ApiController {
     }
 
     @GetMapping("/v1/projects/{project:" + Project.PATTERN + "}")
-    public ResponseEntity<?> project(@PathVariable("project") @Pattern(regexp = Project.PATTERN) String projectId) {
-        var project = super.findProject(projectId);
-        var groups = super.findGroupsAsStream(project).map(Group::id).toList();
-        var versions = super.findVersionsAsStream(project).map(Version::id).toList();
+    public ResponseEntity<?> project(@PathVariable("project") @Pattern(regexp = Project.PATTERN) String projectName) {
+        var project = super.findProject(projectName);
+        var groups = super.findGroupsAsStream(project).map(Group::name).toList();
+        var versions = super.findVersionsAsStream(project).map(Version::name).toList();
         return ok(
                 CACHE,
                 new Response(
-                    project.id(),
                     project.name(),
+                    project.friendlyName(),
                     groups,
                     versions
                 )

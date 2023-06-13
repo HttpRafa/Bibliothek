@@ -62,16 +62,16 @@ public class BuildController extends ApiController {
     }
 
     @GetMapping("/v1/projects/{project:" + Project.PATTERN + "}/versions/{version:" + Version.PATTERN + "}/builds/{build:" + Build.PATTERN + "}")
-    public ResponseEntity<?> build(@PathVariable("project") @Pattern(regexp = Project.PATTERN) String projectId, @PathVariable("version") @Pattern(regexp = Version.PATTERN) String versionId, @PathVariable("build") @Pattern(regexp = Build.PATTERN) int buildNumber) {
-        var project = super.findProject(projectId);
-        var version = super.findVersion(project, versionId);
+    public ResponseEntity<?> build(@PathVariable("project") @Pattern(regexp = Project.PATTERN) String projectName, @PathVariable("version") @Pattern(regexp = Version.PATTERN) String versionName, @PathVariable("build") @Pattern(regexp = Build.PATTERN) int buildNumber) {
+        var project = super.findProject(projectName);
+        var version = super.findVersion(project, versionName);
         var build = super.findBuild(project, version, buildNumber);
         return ok(
                 CACHE,
                 new Response(
-                        project.id(),
                         project.name(),
-                        version.id(),
+                        project.friendlyName(),
+                        version.name(),
                         build.number(),
                         build.timestamp(),
                         build.channel(),

@@ -1,0 +1,6 @@
+app:
+  storagePath: "/data/storage"
+  apiBaseUrl: "http://127.0.0.1/api"
+server:
+  forward-headers-strategy: "framework"
+  port: 8080

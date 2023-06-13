@@ -71,10 +71,10 @@ public class DownloadController extends ApiController {
                     "application/java-archive"
             }
     )
-    public ResponseEntity<?> download(@PathVariable("project") @Pattern(regexp = Project.PATTERN) String projectId, @PathVariable("version") @Pattern(regexp = Version.PATTERN) String versionId, @PathVariable("build") @Pattern(regexp = Build.PATTERN) int buildNumber, @PathVariable("download") @Pattern(regexp = Build.Download.PATTERN) String downloadName) {
+    public ResponseEntity<?> download(@PathVariable("project") @Pattern(regexp = Project.PATTERN) String projectName, @PathVariable("version") @Pattern(regexp = Version.PATTERN) String versionName, @PathVariable("build") @Pattern(regexp = Build.PATTERN) int buildNumber, @PathVariable("download") @Pattern(regexp = Build.Download.PATTERN) String downloadName) {
         try {
-            var project = super.findProject(projectId);
-            var version = super.findVersion(project, versionId);
+            var project = super.findProject(projectName);
+            var version = super.findVersion(project, versionName);
             var build = super.findBuild(project, version, buildNumber);
             var filteredDownloads = build.downloads().entrySet().stream()
                     .filter(entry -> entry.getValue().name().equals(downloadName))
@@ -82,8 +82,8 @@ public class DownloadController extends ApiController {
             for (Map.Entry<String, Build.Download> entry : filteredDownloads) {
                 return new JavaArchive(
                         this.configuration.getStoragePath()
-                                .resolve(project.id())
-                                .resolve(version.id())
+                                .resolve(project.name())
+                                .resolve(version.name())
                                 .resolve(String.valueOf(build.number()))
                                 .resolve(entry.getValue().name()),
                         CACHE

@@ -25,6 +25,7 @@ package de.rafael.bibliothek.database.model;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -33,8 +34,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @since 19:13, 12.06.23
  */
 
+@CompoundIndex(def = "{'name': 1, 'friendlyName': 1}")
 @Document(collection = "projects")
-public record Project(@Id ObjectId _id, @Indexed String id, String name) {
+public record Project(@Id ObjectId _id, @Indexed String name, String friendlyName) {
 
     public static final String PATTERN = "[a-z]+";
 

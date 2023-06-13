@@ -58,7 +58,7 @@ public class ProjectsController extends ApiController {
     @GetMapping("/v1/projects")
     public ResponseEntity<?> projects() {
         var projects = super.findProjects();
-        return ok(CACHE, new Response(projects.stream().map(Project::id).toList()));
+        return ok(CACHE, new Response(projects.stream().map(Project::name).toList()));
     }
 
     private record Response(List<String> projects) {}

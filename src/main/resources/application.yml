@@ -2,5 +2,3 @@ spring:
   data:
     mongodb:
       database: "bibliothek"
-      username: "api"
-      password: "123abc"

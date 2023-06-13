@@ -33,6 +33,7 @@ import de.rafael.bibliothek.database.repository.GroupRepository;
 import de.rafael.bibliothek.database.repository.ProjectRepository;
 import de.rafael.bibliothek.database.repository.VersionRepository;
 import de.rafael.bibliothek.throwables.BuildNotFound;
+import de.rafael.bibliothek.throwables.GroupNotFound;
 import de.rafael.bibliothek.throwables.ProjectNotFound;
 import de.rafael.bibliothek.throwables.VersionNotFound;
 import java.time.Duration;
@@ -65,12 +66,16 @@ public abstract class ApiController {
         return ResponseEntity.ok().cacheControl(cache).body(response);
     }
 
-    protected Project findProject(@NotNull String id) {
-        return this.projects.findById(id).orElseThrow(ProjectNotFound::new);
+    protected Project findProject(@NotNull String name) {
+        return this.projects.findByName(name).orElseThrow(ProjectNotFound::new);
     }
 
-    protected Version findVersion(@NotNull Project project, @NotNull String id) {
-        return this.versions.findByProjectAndId(project._id(), id).orElseThrow(VersionNotFound::new);
+    protected Version findVersion(@NotNull Project project, @NotNull String name) {
+        return this.versions.findByProjectAndName(project._id(), name).orElseThrow(VersionNotFound::new);
+    }
+
+    protected Group findGroup(@NotNull Project project, @NotNull String name) {
+        return this.groups.findByProjectAndName(project._id(), name).orElseThrow(GroupNotFound::new);
     }
 
     protected Build findBuild(@NotNull Project project, @NotNull Version version, int number) {

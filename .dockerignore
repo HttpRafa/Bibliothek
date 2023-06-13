@@ -1,0 +1,8 @@
+*
+
+!*.gradle.kts
+!docker/
+!gradle/
+!gradlew
+!LICENSE*.txt
+!src/

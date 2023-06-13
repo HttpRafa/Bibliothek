@@ -45,3 +45,22 @@ spotless {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks {
+	bootJar {
+		launchScript()
+	}
+
+	// From StackOverflow: https://stackoverflow.com/a/53087407
+	// Licensed under: CC BY-SA 4.0
+	// Adapted to Kotlin
+	register<Copy>("buildForDocker") {
+		from(bootJar)
+		into("build/libs/docker")
+		rename { fileName ->
+			// a simple way is to remove the "-$version" from the jar filename
+			// but you can customize the filename replacement rule as you wish.
+			fileName.replace("-$version", "")
+		}
+	}
+}
