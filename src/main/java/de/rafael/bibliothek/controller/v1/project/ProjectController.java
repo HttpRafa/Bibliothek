@@ -1,13 +1,39 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2023 Rafael
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package de.rafael.bibliothek.controller.v1.project;
 
+import de.rafael.bibliothek.classes.ApiController;
+import de.rafael.bibliothek.configuration.AppConfiguration;
 import de.rafael.bibliothek.database.model.Group;
+import de.rafael.bibliothek.database.model.Project;
 import de.rafael.bibliothek.database.model.Version;
+import de.rafael.bibliothek.database.repository.BuildRepository;
 import de.rafael.bibliothek.database.repository.GroupRepository;
 import de.rafael.bibliothek.database.repository.ProjectRepository;
 import de.rafael.bibliothek.database.repository.VersionRepository;
-import de.rafael.bibliothek.throwables.ProjectNotFound;
-import de.rafael.bibliothek.values.Patterns;
 import jakarta.validation.constraints.Pattern;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
@@ -17,9 +43,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Duration;
-import java.util.List;
-
 /**
  * @author Rafael K.
  * @since 19:46, 12.06.23
@@ -27,27 +50,29 @@ import java.util.List;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProjectController {
+public class ProjectController extends ApiController {
 
-    private static final CacheControl CACHE = CacheControl.empty().cachePublic().sMaxAge(Duration.ofMinutes(30));
-
-    private final ProjectRepository projects;
-    private final GroupRepository groups;
-    private final VersionRepository versions;
+    private static final CacheControl CACHE = defaultCache();
 
     @Autowired
-    public ProjectController(ProjectRepository projects, GroupRepository groups, VersionRepository versions) {
-        this.projects = projects;
-        this.groups = groups;
-        this.versions = versions;
+    public ProjectController(AppConfiguration configuration, ProjectRepository projects, VersionRepository versions, GroupRepository groups, BuildRepository builds) {
+         super(configuration, projects, versions, groups, builds);
     }
 
-    @GetMapping("/v1/projects/{project:" + Patterns.PROJECT_NAME + "}")
-    public ResponseEntity<?> project(@PathVariable("project") @Pattern(regexp = Patterns.PROJECT_NAME) String projectName) {
-        var project = this.projects.findByName(projectName).orElseThrow(ProjectNotFound::new);
-        var groups = this.groups.findAllByProject(project._id()).stream().sorted(Group.COMPARATOR).map(Group::name).toList();
-        var versions = this.versions.findAllByProject(project._id()).stream().sorted(Version.COMPARATOR).map(Version::name).toList();
-        return ResponseEntity.ok().cacheControl(CACHE).body(new Response(project.name(), project.friendlyName(), groups, versions));
+    @GetMapping("/v1/projects/{project:" + Project.PATTERN + "}")
+    public ResponseEntity<?> project(@PathVariable("project") @Pattern(regexp = Project.PATTERN) String projectId) {
+        var project = super.findProject(projectId);
+        var groups = super.findGroupsAsStream(project).map(Group::id).toList();
+        var versions = super.findVersionsAsStream(project).map(Version::id).toList();
+        return ok(
+                CACHE,
+                new Response(
+                    project.id(),
+                    project.name(),
+                    groups,
+                    versions
+                )
+        );
     }
 
     private record Response(String project_id, String project_name, List<String> groups, List<String> versions) {}

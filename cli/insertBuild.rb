@@ -24,7 +24,7 @@ def parse_arguments
     option.on("--project ID") { |id|
       options[:project_id] = id
     }
-    option.on("--projectFriendlyName NAME") { |name|
+    option.on("--projectName NAME") { |name|
       options[:project_name] = name
     }
     option.on("--versionGroup GROUP") { |group|
@@ -83,7 +83,7 @@ def check_arguments(options)
     abort("[ERROR] Please specify a project ID using --project. Example: --project raper")
   end
   unless options.has_key?(:project_name)
-    abort("[ERROR] Please specify a project name using --projectFriendlyName. Example: --projectFriendlyName Raper")
+    abort("[ERROR] Please specify a project name using --projectName. Example: --projectName Raper")
   end
   unless options.has_key?(:group)
     abort("[ERROR] Please specify a version group using --versionGroup. Example: --versionGroup 1.20")
