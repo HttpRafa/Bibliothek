@@ -10,7 +10,7 @@ services:
             - "8081:27017"
         volumes:
             - mongodb_data:/data/db
-            
+
     library:
         build:
             context: .
@@ -25,7 +25,7 @@ services:
             - /srv/download/storage:/data/storage
         depends_on:
             - mongodb
-            
+
 volumes:
     mongodb_data:
 
