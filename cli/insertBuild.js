@@ -98,10 +98,10 @@ async function writeOrGetProject(database, name, friendlyName) {
     return database.collection("projects").findOneAndUpdate(
         { name: name },
         {
-          $setOnInsert: {
-            name: name,
-            friendlyName: friendlyName
-          }
+            $setOnInsert: {
+                name: name,
+                friendlyName: friendlyName
+            }
         },
         { upsert: true, returnOriginal: false }
     );
@@ -111,11 +111,11 @@ async function writeOrGetGroup(database, project, name) {
     return database.collection("groups").findOneAndUpdate(
         { project: project.value._id, name: name },
         {
-          $setOnInsert: {
-            project: project.value._id,
-            name: name,
-            timestamp: new Date()
-          }
+            $setOnInsert: {
+                project: project.value._id,
+                name: name,
+                timestamp: new Date()
+            }
         },
         { upsert: true, returnOriginal: false }
     );
@@ -125,12 +125,12 @@ async function writeOrGetVersion(database, project, group, name) {
     return database.collection("versions").findOneAndUpdate(
         { project: project.value._id, name: name },
         {
-          $setOnInsert: {
-            project: project.value._id,
-            group: group.value._id,
-            name: name,
-            timestamp: new Date()
-          }
+            $setOnInsert: {
+                project: project.value._id,
+                group: group.value._id,
+                name: name,
+                timestamp: new Date()
+            }
         },
         { upsert: true, returnOriginal: false }
     );
@@ -188,7 +188,9 @@ function generateName(download, projectName, versionName, buildNumber) {
 }
 
 function copyDownload(download, storageFolder, projectName, versionName, buildNumber) {
-    FileSystem.copyFileSync(download.path, Path.join(storageFolder, generateName(download, projectName, versionName, buildNumber)));
+    const target = Path.join(storageFolder, generateName(download, projectName, versionName, buildNumber));
+    console.log(`[INFO/copy] Copying ${download.path} to ${target}`);
+    FileSystem.copyFileSync(download.path, target);
 }
 
 async function main() {
@@ -269,5 +271,6 @@ async function main() {
 
 main().catch((error) => {
     console.error(`[ERROR] An unhandled exception occurred: ${error}`);
+    console.error(error);
     process.exit(1);
 });
