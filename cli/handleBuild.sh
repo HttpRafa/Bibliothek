@@ -54,7 +54,7 @@ echo $DOWNLOADS
 docker run --rm --network="$NETWORK" -e MONGODB_URL=$MONGODB_URL -v $(pwd):/app -v $(pwd)/repo:/repo -v $STORAGE_DIR:/storage -v $(pwd)/.gitconfig:/root/.gitconfig node:latest node /app/insertBuild.js \
 	--projectName=$PROJECT \
 	--projectFriendlyName=$PROJECT_NAME \
-	--versionGroupName=$VERSION_GROUP \
+	--versionGroup=$VERSION_GROUP \
 	--versionName=$VERSION \
 	--buildNumber=$BUILD \
 	--repositoryPath=/repo \

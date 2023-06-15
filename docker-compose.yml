@@ -31,5 +31,6 @@ volumes:
     library_data:
 
 networks:
-    library:
-        driver: bridge
+    default:
+        external:
+            name: library
