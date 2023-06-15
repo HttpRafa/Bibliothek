@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+    mongodb:
+        image: mongodb/mongodb-community-server:latest
+        restart: unless-stopped
+        environment:
+            - MONGODB_INITDB_ROOT_USERNAME=admin
+            - MONGODB_INITDB_ROOT_PASSWORD=123abc
+        ports:
+            - "8081:27017"
+        volumes:
+            - mongodb_data:/data/db
+            
+    library:
+        build:
+            context: .
+        restart: unless-stopped
+        environment:
+            - SPRING_DATA_MONGODB_HOST=mongodb
+            - SPRING_DATA_MONGODB_USERNAME=library
+            - SPRING_DATA_MONGODB_PASSWORD=123abc
+        ports:
+            - "8080:8080"
+        volumes:
+            - library_data:/data/storage
+        depends_on:
+            - mongodb
+            
+volumes:
+    mongodb_data:
+    library_data:
+
+networks:
+    library:
+        driver: bridge
