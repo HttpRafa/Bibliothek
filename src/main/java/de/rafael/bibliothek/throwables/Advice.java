@@ -24,7 +24,6 @@
 package de.rafael.bibliothek.throwables;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,31 +50,31 @@ public class Advice {
     @ExceptionHandler(DownloadFailed.class)
     @ResponseBody
     public ResponseEntity<?> downloadFailed(final DownloadFailed exception) {
-        return this.error(HttpStatus.INTERNAL_SERVER_ERROR, "An internal error occurred while serving your download.");
+        exception.printStackTrace(); // TODO: Remove after all errors are fixed
+        return this.error(HttpStatus.INTERNAL_SERVER_ERROR, "An internal error occurred while serving your download.", exception.getMessage());
     }
 
     @ExceptionHandler(DownloadNotFound.class)
     @ResponseBody
     public ResponseEntity<?> downloadNotFound(final DownloadNotFound exception) {
-        return this.error(HttpStatus.NOT_FOUND, "Download not found.");
+        return this.error(HttpStatus.NOT_FOUND, "Download not found.", null);
     }
 
     @ExceptionHandler(ProjectNotFound.class)
     @ResponseBody
     public ResponseEntity<?> projectNotFound(final ProjectNotFound exception) {
-        return this.error(HttpStatus.NOT_FOUND, "Project not found.");
+        return this.error(HttpStatus.NOT_FOUND, "Project not found.", null);
     }
 
     @ExceptionHandler(VersionNotFound.class)
     @ResponseBody
     public ResponseEntity<?> versionNotFound(final VersionNotFound exception) {
-        return this.error(HttpStatus.NOT_FOUND, "Version not found.");
+        return this.error(HttpStatus.NOT_FOUND, "Version not found.", null);
     }
 
-    @Contract("_, _ -> new")
-    private @NotNull ResponseEntity<?> error(HttpStatus status, String error) {
+    private @NotNull ResponseEntity<?> error(HttpStatus status, String error, String message) {
         return new ResponseEntity<>(
-                this.json.createObjectNode().put("error", error),
+                this.json.createObjectNode().put("error", error).put("message", message),
                 status
         );
     }

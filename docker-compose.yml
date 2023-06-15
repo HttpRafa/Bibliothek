@@ -22,13 +22,12 @@ services:
         ports:
             - "8080:8080"
         volumes:
-            - library_data:/data/storage
+            - /srv/download/storage:/data/storage
         depends_on:
             - mongodb
             
 volumes:
     mongodb_data:
-    library_data:
 
 networks:
   default:
