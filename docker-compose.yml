@@ -31,6 +31,6 @@ volumes:
     library_data:
 
 networks:
-    default:
-        external:
-            name: library
+  default:
+    name: library
+    external: true
