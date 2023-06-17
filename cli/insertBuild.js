@@ -103,7 +103,7 @@ async function writeOrGetProject(database, name, friendlyName) {
                 friendlyName: friendlyName
             }
         },
-        { upsert: true, returnOriginal: false }
+        { upsert: true, returnDocument: "after" }
     );
 }
 
@@ -117,7 +117,7 @@ async function writeOrGetGroup(database, project, name) {
                 timestamp: new Date()
             }
         },
-        { upsert: true, returnOriginal: false }
+        { upsert: true, returnDocument: "after" }
     );
 }
 
@@ -132,7 +132,7 @@ async function writeOrGetVersion(database, project, group, name) {
                 timestamp: new Date()
             }
         },
-        { upsert: true, returnOriginal: false }
+        { upsert: true, returnDocument: "after" }
     );
 }
 
