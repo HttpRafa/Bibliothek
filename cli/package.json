@@ -10,7 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "yargs": "17.7.2",
-    "mongodb": "5.6.0",
+    "mongodb": "5.8.0",
     "gitlog": "4.0.8"
   }
 }
